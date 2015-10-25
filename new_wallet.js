@@ -15,7 +15,6 @@ function newWallet(){
   };
 
   var refUser = new Firebase("https://gambit-users.firebaseio.com/Users");
-  var authData = refUser.getAuth();
   var password = refUser.onAuth(refUser.child("users").child(authData.uid).child("password");
   var email = refUser.onAuth(refUser.child("users").child(authData.uid).child("email");
   var body = "password = password& \
@@ -91,7 +90,3 @@ if (balanceTotal() >= 360000) {
 }
 
 var ref = new Firebase("https://gambitapp.firebaseio.com/");
-
-ref.on("child_added", function(snapshot)){
-
-}
