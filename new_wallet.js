@@ -1,6 +1,3 @@
-//Read email from Facebook
-var emailRef = new Firebase("");
-
 //Creates new user wallet and retrieves user key
 function newWallet(){
   var request = new XMLHttpRequest();
@@ -17,45 +14,28 @@ function newWallet(){
     }
   };
 
-  var body = "password= \
-  api_code= \
-  email= ";
+  var refUser = new Firebase("https://gambit-users.firebaseio.com/Users");
+  var authData = refUser.getAuth();
+  var password = refUser.onAuth(refUser.child("users").child(authData.uid).child("password");
+  var email = refUser.onAuth(refUser.child("users").child(authData.uid).child("email");
+  var body = "password = password& \
+              api_code= 75ed7996-fa57-49f2-822b-e7637a7b5b4a&\
+              email= email";
 
   var walletDict = request.send(body);
-  return walletDict["guid"];
+  refUser.child("users").set({
+    guid: walletDict["guid"],
+    address: walletDict["address"],
+  });
 
-//checks to see if user is in database
-var isNewUser = true;
-
-var userRef = new Firebase("https://gambit-users.firebaseio.com/"));
-ref.onAuth(function(authData) {
-  if (authData && isNewUser) {
-    // save the user's profile into the database so we can list users,
-    userRef.child("users").child(authData.uid).set({
-      provider: authData.provider,
-      name: getName(authData)
-      email:
-      password:
-      guid: newWallet(),
-    });
-  }
-});
-
-// find a suitable name based on the meta info given by each provider
-function getName(authData) {
-  switch(authData.provider) {
-     case 'password':
-       return authData.password.email.replace(/@.*/, '');
-     case 'facebook':
-       return authData.facebook.displayName;
-  }
-}
 
 //retrieves total balance from users account
 function balanceTotal(){
   var request = new XMLHttpRequest();
+  var guidRef = new Firebase("https://gambit-users.firebaseio.com/Users");
+  var guid = guidRef.onAuth(guidRef.child("users").child(authData.uid).child("guid");
 
-  request.open('POST', 'https://blockchain.info/merchant/(guid)/balance');
+  request.open('POST', 'https://blockchain.info/merchant/' + guid + '/balance');
 
   request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
@@ -66,8 +46,9 @@ function balanceTotal(){
       console.log('Body:', this.responseText);
     }
   };
-
-  var body = "password=(password)";
+  var passwordRef = new Firebase("https://gambit-users.firebaseio.com/Users");
+  var password = passwordRef.onAuth(passwordRef.child("users").child(authData.uid).child("password");
+  var body = "password=password";
 
   var totalDict = request.send(body);
   return totalDict["balance"];
@@ -76,8 +57,10 @@ function balanceTotal(){
 //voter's payment
 function userPayment (){
   var request = new XMLHttpRequest();
+  var guidRef = new Firebase("https://gambit-users.firebaseio.com/Users")
+  var guid = guidRef.onAuth(guidRef.child("users").child(authData.uid).child("guid")
 
-  request.open('POST', 'https://blockchain.info/merchant/(guid)/payment');
+  request.open('POST', 'https://blockchain.info/merchant/' + guid + '/payment');
 
   request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
@@ -88,19 +71,27 @@ function userPayment (){
       console.log('Body:', this.responseText);
     }
   };
-
-  var body = "password=(currentuserpassword) \
-  address=& \
-  amount= 350000 + 350000(.01)& \
-  from=& \
-  fee=10000&";
+  var passwordRef = new Firebase("https://gambit-users.firebaseio.com/Users");
+  var password = passwordRef.onAuth(passwordRef.child("users").child(authData.uid).child("password");
+  var address = passwordRef.onAuth(passwordRef.child("users").child(authData.uid).child("address");
+  var body = "password=password&\
+              address= \
+              amount= 350000& \
+              from=address& \
+              fee=10000&";
 
   request.send(body);
 };
 
 //checks to see if user has sufficient balance
-if (balanceTotal() >= 360000 + 350000(.01)){
+if (balanceTotal() >= 360000) {
   return userPayment();
 } else {
   return "Transaction Error";
+}
+
+var ref = new Firebase("https://gambitapp.firebaseio.com/");
+
+ref.on("child_added", function(snapshot)){
+
 }
